@@ -49,11 +49,10 @@ android {
     }
     signingConfigs {
         release {
-            Properties properties = getProperties('/Users/karim/Documents/Phonograph/privatekeys/keystore.properties')
-            storeFile file(getProperty(properties, 'storeFile'))
-            keyAlias getProperty(properties, 'keyAlias')
-            storePassword getProperty(properties, 'storePassword')
-            keyPassword getProperty(properties, 'keyPassword')
+            storeFile file("phonograph.keystore")
+            storePassword "phonograph"
+            keyAlias "phonograph"
+            keyPassword "phonograph"
         }
     }
     buildTypes {
@@ -68,6 +67,18 @@ android {
             versionNameSuffix ' (' + defaultConfig.versionCode + ') DEBUG (' + gitBranch() + ')'
         }
     }
+
+    // http://www.sollyu.com/android-apk-studio-generated-automatically-appends-a-version-number/
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if(buildType.name == "release") {
+                output.outputFileName = new File("Phonograph" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
+            } else {
+                output.outputFileName = new File("Phonograph" + "-" + buildType.name + "-v" + defaultConfig.versionName + ".apk" );
+            }
+        }
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
